@@ -2,7 +2,7 @@
 # This directory contains defaults for variables used in this role
 
 # set to yes in order to set the graphical target as default
-# this is not really idempotent and does not reset the host if changed to no!
+# this is not really idempotent
 xfce_target_graphical_default: true
 
 # set to your default target name if you want to unset graphical target
