@@ -1,0 +1,72 @@
+---
+
+- name: yum install epel-release repository package
+  yum:
+    name: epel-release
+    state: present
+    update_cache: yes
+
+- name: yum install prerequisite packages for Xfce
+  yum:
+    name:
+     - "@base-x"
+     - sddm
+    state: present
+    update_cache: yes
+
+- name: yum install packages for Xfce
+  yum:
+    name:
+     - openssh-askpass
+     - pinentry-gtk
+     - xfce-polkit
+     - xfce4-appfinder
+     - xfce4-panel
+     - xfce4-power-manager
+     - xfce4-session
+     - xfce4-settings
+     - xfce4-terminal
+     - xfconf
+     - xfdesktop
+     - xfwm4
+     - xfce4-taskmanager
+     - xfce4-systemload-plugin
+     - xfce4-netload-plugin
+    state: present
+
+- name: enable sddm as service and graphical login
+  ansible.builtin.systemd:
+    name: sddm
+    state: started
+    masked: no
+    enabled: yes
+  become: yes
+
+- name: info if not default graphical target
+  debug:
+    msg: Now an Xfce windows environment can be used by manually running systemctl start sddm
+  when: xfce_target_graphical_default is false
+
+- name: Get stats of the systemd default target file
+  ansible.builtin.stat:
+    path: /etc/systemd/system/default.target
+  register: default_target_stat
+
+# enable globally = set graphical target when set to do so
+# this is not really idempotent and does not reset the host if changed to no!
+# systemctl set-default graphical.target
+# Removed /etc/systemd/system/default.target.
+# Created symlink /etc/systemd/system/default.target → /usr/lib/systemd/system/graphical.target.
+- name: set graphical target as default
+  file:
+    src: /usr/lib/systemd/system/graphical.target
+    dest: /etc/systemd/system/default.target
+    state: link
+  when: xfce_target_graphical_default is true
+
+- name: undo set graphical target as default
+  file:
+    src: /usr/lib/systemd/system/{{ xfce_target_undo_default }}.target
+    dest: /etc/systemd/system/default.target
+    state: link
+  when: xfce_target_graphical_default is false
