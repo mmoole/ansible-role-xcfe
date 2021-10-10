@@ -9,29 +9,29 @@
 - name: yum install prerequisite packages for Xfce
   yum:
     name:
-     - "@base-x"
-     - sddm
+      - "@base-x"
+      - sddm
     state: present
     update_cache: yes
 
 - name: yum install packages for Xfce
   yum:
     name:
-     - openssh-askpass
-     - pinentry-gtk
-     - xfce-polkit
-     - xfce4-appfinder
-     - xfce4-panel
-     - xfce4-power-manager
-     - xfce4-session
-     - xfce4-settings
-     - xfce4-terminal
-     - xfconf
-     - xfdesktop
-     - xfwm4
-     - xfce4-taskmanager
-     - xfce4-systemload-plugin
-     - xfce4-netload-plugin
+      - openssh-askpass
+      - pinentry-gtk
+      - xfce-polkit
+      - xfce4-appfinder
+      - xfce4-panel
+      - xfce4-power-manager
+      - xfce4-session
+      - xfce4-settings
+      - xfce4-terminal
+      - xfconf
+      - xfdesktop
+      - xfwm4
+      - xfce4-taskmanager
+      - xfce4-systemload-plugin
+      - xfce4-netload-plugin
     state: present
 
 - name: enable sddm as service and graphical login
@@ -45,7 +45,7 @@
 - name: info if not default graphical target
   debug:
     msg: Now an Xfce windows environment can be used by manually running systemctl start sddm
-  when: xfce_target_graphical_default is false
+  when: not xfce_target_graphical_default
 
 - name: Get stats of the systemd default target file
   ansible.builtin.stat:
@@ -62,11 +62,11 @@
     src: /usr/lib/systemd/system/graphical.target
     dest: /etc/systemd/system/default.target
     state: link
-  when: xfce_target_graphical_default is true
+  when: xfce_target_graphical_default | bool
 
 - name: undo set graphical target as default
   file:
     src: /usr/lib/systemd/system/{{ xfce_target_undo_default }}.target
     dest: /etc/systemd/system/default.target
     state: link
-  when: xfce_target_graphical_default is false
+  when: not xfce_target_graphical_default

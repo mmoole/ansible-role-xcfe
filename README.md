@@ -1,15 +1,10 @@
-About
------
+# ansible_role_xfce
+
+[![badge](https://img.shields.io/badge/Xfce-Desktop-green?logo=xfce)](https://xfce.org/)
+
 This role installs sddm as login window and Xfce as desktop manager thus usign much less ressources than gnome desktop.
 
-Installation
-------------
-```bash
-...
-```
-
-Variables
----------
+## Variables
 
 Variables with examples:
 
@@ -23,23 +18,17 @@ xfce_target_graphical_default: true
 xfce_target_undo_default: "multi-user"
 ```
 
-Example Usage
------
+## Example Usage
 
 ```yml
 roles:
   - ansible-role-xfce
-
 ```
 
-Acknowledgements
-----------------
+## Acknowledgements
 
-* many thanks to the old CentOS forum: https://forums.centos.org/viewtopic.php?t=72433
+- many thanks to the old CentOS forum: <https://forums.centos.org/viewtopic.php?t=72433>
 
-
-
-License
--------
+## License
 
 MIT
